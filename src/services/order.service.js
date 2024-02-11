@@ -109,3 +109,7 @@ exports.payInCart = async ({ userId }) => {
         message: 'Đặt hành thành công'
     }
 }
+exports.getAllOrder = async (req) => {
+    const orders = await orderSchema.find().populate('user');
+    return orders;
+}

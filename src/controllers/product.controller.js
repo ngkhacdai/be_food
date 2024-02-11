@@ -1,4 +1,4 @@
-const productService = require('../controllers/product.controller')
+const productService = require('../services/product.service')
 
 
 exports.addproduct = async (req, res, next) => {

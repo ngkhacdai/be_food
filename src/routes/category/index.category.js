@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../../controllers/category.controller')
-const { verifyToken } = require('../../auth/checkAuth')
+const { checkAdminRole } = require('../../auth/checkAuth')
 
 
 router.get('/getcategory', checkAdminRole, controller.getAllCategory)

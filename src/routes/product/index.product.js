@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../../controllers/product.controller')
 const { verifyToken, checkAdminRole } = require('../../auth/checkAuth')
+const upload = require('../../utils/multer.util')
 
 router.get('/getallproduct', verifyToken, controller.getAllProduct)
 

@@ -36,3 +36,6 @@ exports.payInCart = async (req, res, next) => {
         userId: req.user._id,
     }))
 }
+exports.getAllOrder = async (req, res, next) => {
+    res.send(await service.getAllOrder(req))
+}

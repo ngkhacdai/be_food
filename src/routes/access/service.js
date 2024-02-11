@@ -6,7 +6,7 @@ const cartSchema = require('../../modules/cart')
 const { createToken } = require('../../auth/createToken')
 const blogSchema = require('../../modules/blogpost')
 class service {
-    static signup = async ({ username, email, password, address,phone }) => {
+    static signup = async ({ username, email, password, address, phone }) => {
         const checkEmail = await userSchema.findOne({ email: email });
         if (checkEmail) return { status: 401, message: 'Tài khoản đã tồn tại' }
         console.log(checkEmail);
@@ -26,41 +26,41 @@ class service {
     }
     static login = async ({ email, password }) => {
         const checkEmail = await userSchema.findOne({ email: email });
-        if (!checkEmail) return {  status: 401,message: 'Tài khoản không tồn tại' }
+        if (!checkEmail) return { status: 401, message: 'Tài khoản không tồn tại' }
         const match = await bcrypt.compare(password, checkEmail.password);
-        if (!match) return {status: 401 , message: 'Sai mật khẩu' }
-        const token = await createToken(checkEmail._id, checkEmail.username,checkEmail.role)
+        if (!match) return { status: 401, message: 'Sai mật khẩu' }
+        const token = await createToken(checkEmail._id, checkEmail.username, checkEmail.role)
         return {
             message: 'Đăng nhập thành công !!!',
             status: 200,
             token
         }
     }
-    static getAllProduct = async () => { 
+    static getAllProduct = async () => {
         const product = await productSchema.find().lean();
         return product;
     }
-    static getProductByID = async (req) => { 
+    static getProductByID = async (req) => {
         const product = await productSchema.findOne(req.body._id).lean();
         return product;
     }
-    static payOneProduct = async ({ userID, _id, quantity }) => { 
+    static payOneProduct = async ({ userID, _id, quantity }) => {
         const product = await productSchema.findOne({ _id: _id });
-        if(!product) return {message: "Product not found"}
+        if (!product) return { message: "Product not found" }
         const newStockQuantity = product.stockQuantity - quantity;
         const updateOneProduct = await productSchema.findOneAndUpdate({ _id: _id }, {
-            $set: {soldQuantity: quantity,stockQuantity: newStockQuantity}
+            $set: { soldQuantity: quantity, stockQuantity: newStockQuantity }
         })
         const priceProduct = product.price * quantity;
         const newOrder = await orderSchema.create({
             user: userID,
             products: [
-                {product: _id, quantity: quantity, price: priceProduct}
+                { product: _id, quantity: quantity, price: priceProduct }
             ],
-            totalPrice:  priceProduct,
+            totalPrice: priceProduct,
             status: 'Chờ xác nhận'
         })
-        if(!newOrder) return 'Mua hàng thất bại'
+        if (!newOrder) return 'Mua hàng thất bại'
         return {
             message: 'Mua hàng thành công',
             status: 200,
@@ -68,7 +68,7 @@ class service {
         }
     }
     static getAllOrderByUser = async ({ userID }) => {
-        const order = await orderSchema.find({ user: userID }).sort({"orderDate": -1})
+        const order = await orderSchema.find({ user: userID }).sort({ "orderDate": -1 })
         if (!order) return { message: 'Không có đơn hàng nào' }
         return {
             order
@@ -84,10 +84,10 @@ class service {
             order
         }
     }
-    static addToCart = async ({ userID,_id }) => {
+    static addToCart = async ({ userID, _id }) => {
         const product = await productSchema.findById({ _id: _id });
-        if (!product) { 
-            return {message: 'Không tìm thấy sản phẩm'}
+        if (!product) {
+            return { message: 'Không tìm thấy sản phẩm' }
         }
         let cart = await cartSchema.findOne({ user: userID })
         if (!cart) {
@@ -110,7 +110,7 @@ class service {
     static removeFromCart = async ({ userID, _id }) => {
         const product = await productSchema.findOne({ _id: _id })
         const cart = await cartSchema.findOne({ user: userID })
-        const total = cart.total -  cart.items.find(item => item.product == _id).quantity * product.price
+        const total = cart.total - cart.items.find(item => item.product == _id).quantity * product.price
         await cartSchema.findOneAndUpdate({ user: userID }, {
             $pull: {
                 items: {
@@ -124,13 +124,13 @@ class service {
         return {
             message: 'Xóa sản phẩm thành công',
         }
-    } 
+    }
     static increaseQuantity = async ({ userID, _id }) => {
         const product = await productSchema.findOne({ _id: _id })
         const cart = await cartSchema.findOne({ user: userID })
         const total = cart.total + product.price
         const newQuan = (cart.items.find(item => item.product == _id).quantity + 1)
-        await cartSchema.findOneAndUpdate({ user: userID , 'items.product': _id }, {
+        await cartSchema.findOneAndUpdate({ user: userID, 'items.product': _id }, {
             $set: {
                 total: total,
                 'items.$.quantity': newQuan
@@ -139,13 +139,13 @@ class service {
         return {
             message: 'Tăng số lượng sản phẩm thành công',
         }
-    } 
+    }
     static decreaseQuantity = async ({ userID, _id }) => {
         const product = await productSchema.findOne({ _id: _id })
         const cart = await cartSchema.findOne({ user: userID })
         const total = cart.total - product.price
         const newQuan = (cart.items.find(item => item.product == _id).quantity - 1)
-        await cartSchema.findOneAndUpdate({ user: userID , 'items.product': _id }, {
+        await cartSchema.findOneAndUpdate({ user: userID, 'items.product': _id }, {
             $set: {
                 total: total,
                 'items.$.quantity': newQuan
@@ -154,7 +154,7 @@ class service {
         return {
             message: 'Tăng số lượng sản phẩm thành công',
         }
-    } 
+    }
     static payInCart = async ({ userId }) => {
         const cart = await cartSchema.findOne({ user: userId })
         await orderSchema.create({
@@ -185,8 +185,9 @@ class service {
     static huyDonHang = async ({ _id }) => {
         const orderDetail = await orderSchema.findOneAndUpdate({ _id: _id }, {
             $set: {
-            status: 'Đơn hàng đã bị hủy'
-        }}).populate('user').populate({
+                status: 'Đơn hàng đã bị hủy'
+            }
+        }).populate('user').populate({
             path: 'products.product',
             model: 'product',
         })
@@ -195,8 +196,9 @@ class service {
     static nhanHang = async ({ _id }) => {
         const orderDetail = await orderSchema.findOneAndUpdate({ _id: _id }, {
             $set: {
-            status: 'Đã giao hàng'
-        }}).populate('user').populate({
+                status: 'Đã giao hàng'
+            }
+        }).populate('user').populate({
             path: 'products.product',
             model: 'product',
         })
@@ -224,4 +226,4 @@ class service {
     }
 }
 
-module.exports =  service;
+module.exports = service;

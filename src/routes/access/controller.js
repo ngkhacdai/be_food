@@ -1,7 +1,7 @@
 const service = require('./service')
 
 class controller {
-    signup = async (req, res, next) =>{
+    signup = async (req, res, next) => {
         res.send(await service.signup(req.body))
     }
     login = async (req, res, next) => {
@@ -10,10 +10,10 @@ class controller {
     getAllProduct = async (req, res, next) => {
         res.send(await service.getAllProduct())
     }
-    getProductByID = async (req, res, next) => { 
+    getProductByID = async (req, res, next) => {
         res.send(await service.getProductByID(req))
     }
-    payOneProduct = async (req, res, next) => { 
+    payOneProduct = async (req, res, next) => {
         res.send(
             await service.payOneProduct({
                 userID: req.user._id,
@@ -36,23 +36,24 @@ class controller {
         )
     }
     addToCart = async (req, res, next) => {
-        res.send(await service.addToCart({userID: req.user._id,
+        res.send(await service.addToCart({
+            userID: req.user._id,
             ...req.body
         }))
     }
-    removeFromCart = async (req, res, next) => { 
+    removeFromCart = async (req, res, next) => {
         res.send(await service.removeFromCart({
             userID: req.user._id,
             ...req.body
         }))
     }
-    increaseQuantity = async (req, res, next) => { 
+    increaseQuantity = async (req, res, next) => {
         res.send(await service.increaseQuantity({
             userID: req.user._id,
             ...req.body
         }))
     }
-    decreaseQuantity = async (req, res, next) => { 
+    decreaseQuantity = async (req, res, next) => {
         res.send(await service.decreaseQuantity({
             userID: req.user._id,
             ...req.body
@@ -64,10 +65,10 @@ class controller {
         }))
     }
     huyDonHang = async (req, res, next) => {
-        res.send(await service.huyDonHang({_id: req.body._id}))
+        res.send(await service.huyDonHang({ _id: req.body._id }))
     }
     nhanHang = async (req, res, next) => {
-        res.send(await service.nhanHang({_id: req.body._id}))
+        res.send(await service.nhanHang({ _id: req.body._id }))
     }
     getItemInCart = async (req, res, next) => {
         res.send(await service.getItemInCart({

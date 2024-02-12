@@ -1,6 +1,6 @@
 const productSchema = require('../modules/product')
 const orderSchema = require('../modules/order')
-
+const cartSchema = require('../modules/cart')
 
 exports.payOneProduct = async ({ userID, _id, quantity }) => {
     const product = await productSchema.findOne({ _id: _id });

@@ -37,5 +37,5 @@ exports.payInCart = async (req, res, next) => {
     }))
 }
 exports.getAllOrder = async (req, res, next) => {
-    res.send(await service.getAllOrder(req))
+    res.send(await orderService.getAllOrder(req))
 }

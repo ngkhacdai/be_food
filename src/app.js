@@ -6,7 +6,9 @@ const compression = require('compression');
 const cors = require('cors')
 require('dotenv').config();
 
-// init midleware
+helmet({
+    crossOriginResourcePolicy: false,
+})
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());

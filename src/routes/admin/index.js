@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { checkAdminRole } = require('../../auth/checkAuth')
-const controller = require('./controller')
+const controller = require('../../controllers/admin.controller')
 
 router.get('/getcategory', checkAdminRole, controller.getAllCategory)
 

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('./controller')
-const { verifyToken } = require('../../auth/checkAuth')
+const controller = require('../../controllers/access.controller')
 router.post('/signup', controller.signup)
 
 router.post('/login', controller.login)

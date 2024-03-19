@@ -1,6 +1,6 @@
 const userSchema = require('../modules/user')
 const bcrypt = require('bcrypt');
-
+const { createToken } = require('../auth/createToken')
 exports.signup = async ({ username, email, password, address, phone }) => {
     const checkEmail = await userSchema.findOne({ email: email });
     if (checkEmail) return { status: 401, message: 'Tài khoản đã tồn tại' }
